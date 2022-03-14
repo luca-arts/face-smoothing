@@ -141,7 +141,7 @@ def create_img_output_path(filename):
     return filename.format(counter)
 
 
-def save_image(filename, img):
+def save_image(filename, img, counter: bool=False):
     """
     Save an image using OpenCV
 
@@ -153,14 +153,17 @@ def save_image(filename, img):
         Name to save image as
     img : str
         Name to save image as
-
+    counter: bool
+        if True append a counter at the filename
     Returns
     -------
     Bool : bool
         True if image save was success
     """
     # Create filename
-    filename = create_img_output_path(filename)
+    if(counter):
+      filename = create_img_output_path(filename)
+    
     # Save image
     return cv2.imwrite(filename, img)
 
@@ -287,5 +290,3 @@ def check_if_adding_bboxes(args, img_steps):
         return img_steps[5]
     else:
         return img_steps[6]
-
-
