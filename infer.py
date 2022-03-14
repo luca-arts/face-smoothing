@@ -48,6 +48,10 @@ def parse_args():
     parser.add_argument('--save-steps', 
                         action='store_true',
                         help='Saves each step of the image.')
+    parser.add_argument('--config', 
+                        type=str, 
+                        help='path to config file',
+                        default='configs/configs.yaml')                    
     args = parser.parse_args()
     # assert args.image_shape is None or len(args.image_shape) == 2, \
     #     'You need to provide a 2-dimensional tuple as shape (H,W)'
@@ -57,7 +61,7 @@ def parse_args():
     return args
 
 
-def load_configs():
+def load_configs(config_path):
     """
     Loads the project configurations.
 
@@ -66,17 +70,17 @@ def load_configs():
     configs : dict
         A dictionary containing the configs
     """
-    with open('/content/drive/My Drive/Colab Notebooks/face-smoothing'\
-               '/configs/configs.yaml', 'r') as file:
+    with open(config_path, 'r') as file:
         return yaml.load(file, Loader=yaml.FullLoader)
 
 
 def main(args):
     """Puts it all together."""
+    
     # Start measuring time
     tic = time.perf_counter()
     # Load project configurations
-    cfg = load_configs()
+    cfg = load_configs(args.config)
     # Load the network
     net = cv2.dnn.readNetFromTensorflow(cfg['net']['model_file'], 
                                         cfg['net']['cfg_file'])
