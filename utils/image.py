@@ -85,14 +85,17 @@ def process_image(input_img, cfg, net):
     input_img = check_img_size(input_img)
     # Detect face
     detected_img, bboxes = detect.detect_face(cfg, net, input_img)
+    if(len(bboxes)>=1):
     # Smooth face and return steps
-    output_img, roi_img, hsv_mask, smoothed_roi = smooth.smooth_face(cfg,
-                                                                     input_img, 
-                                                                     bboxes)
-    # Draw bboxes on output_img
-    output_w_bboxes = draw_bboxes(output_img, cfg, bboxes)
-    return (input_img, detected_img, roi_img, hsv_mask, 
+      output_img, roi_img, hsv_mask, smoothed_roi = smooth.smooth_face(cfg,
+                                                                      input_img, 
+                                                                      bboxes)
+      # Draw bboxes on output_img
+      output_w_bboxes = draw_bboxes(output_img, cfg, bboxes)
+      return (input_img, detected_img, roi_img, hsv_mask, 
             smoothed_roi, output_w_bboxes, output_img)
+    else:
+      return None
 
 
 def load_image(path):
