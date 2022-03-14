@@ -21,7 +21,7 @@ from utils.video import (split_video,
 from utils.types import (is_image,
                          is_video,
                          is_directory)
-
+import traceback
 
 def parse_args():
     """
@@ -110,27 +110,35 @@ def main(args):
         elif is_directory(input_file):
             # For each file in the dir
             for file in os.listdir(input_file):
-                # Join input dir and file name
-                file = os.path.join(input_file, file)
-                # If file is a compatible video file
-                if is_video(file):
-                    # Process video
-                    process_video(file, args, cfg, net)
-                # If file is a compatible image file    
-                if is_image(file):
-                    # Load image
-                    input_img = load_image(file)
-                    # Process image
-                    img_steps = process_image(input_img, cfg, net)
-                    # Save final image to specified output filename
-                    out_filename = os.path.join(args.output, cfg['image']['output'])
-                     # Check for --show-detections flag
-                    output_img = check_if_adding_bboxes(args, img_steps)
-                    # Save image
-                    img_saved = save_image(out_filename, output_img)
-
+                print('next image: ',file)
+                try:
+                  # Join input dir and file name
+                  file = os.path.join(input_file, file)
+                  # If file is a compatible video file
+                  if is_video(file):
+                      # Process video
+                      process_video(file, args, cfg, net)
+                  # If file is a compatible image file    
+                  if is_image(file):
+                      # Load image
+                      input_img = load_image(file)
+                      # Process image
+                      img_steps = process_image(input_img, cfg, net)
+                      if(img_steps != None):
+                        print("saving image ",file)
+                        # Save final image to specified output filename
+                        out_filename = os.path.join(args.output, cfg['image']['output'])
+                        # Check for --show-detections flag
+                        output_img = check_if_adding_bboxes(args, img_steps)
+                        # Save image
+                        img_saved = save_image(out_filename, output_img)
+                except UnboundLocalError as e:
+                  print('no face detected?', e)
+                  traceback.print_exc()
     except ValueError:
         print('Input must be a valid image, video, or directory.')
+    
+        
     
     # Save processing steps
     if args.save_steps:
