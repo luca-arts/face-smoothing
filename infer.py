@@ -113,21 +113,22 @@ def main(args):
                 print('next image: ',file)
                 try:
                   # Join input dir and file name
-                  file = os.path.join(input_file, file)
+                  file_path = os.path.join(input_file, file)
                   # If file is a compatible video file
-                  if is_video(file):
+                  if is_video(file_path):
                       # Process video
-                      process_video(file, args, cfg, net)
+                      process_video(file_path, args, cfg, net)
                   # If file is a compatible image file    
-                  if is_image(file):
+                  if is_image(file_path):
                       # Load image
-                      input_img = load_image(file)
+                      input_img = load_image(file_path)
                       # Process image
                       img_steps = process_image(input_img, cfg, net)
                       if(img_steps != None):
-                        print("saving image ",file)
+                        print("saving image ",file_path)
                         # Save final image to specified output filename
-                        out_filename = os.path.join(args.output, cfg['image']['output'])
+                        out_filename = os.path.join(args.output, cfg['image']['output']+file)
+                        print(out_filename)
                         # Check for --show-detections flag
                         output_img = check_if_adding_bboxes(args, img_steps)
                         # Save image
